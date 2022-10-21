@@ -1,36 +1,74 @@
 <template>
-<div class="container">
-      <h1>To Do List</h1>
-      <div>
-        <input type="text" id="inputText" v-model="search"/>
-        <input type="submit" id="addToDo" value="Add" />
-        <input type="submit"  id="clearToDo" value="Remove" />
+  <div class="container">
+    <header class="text-center text-light my-4">
+      <h1 class="mb-4">Vue To Do List</h1>
+    </header>
+
+    <form @submit.prevent="addToDo">
+      <div class="text-center my-4">
+        <label class="text-light">Add New To Do</label>
+        <div class="control">
+          <input v-model="todo" class="input form-control m-auto my-4" type="text" autocomplete="off"
+            placeholder="Add New " />
+        </div>
+        <button type="submit" class="button btn btn-light my-1">Add</button>
       </div>
-      <div class="to-dos" id="toDoContainer"></div>
+    </form>
+    <div v-for="(todo, index) in todos" :key="index">
+      <ul class="list-group todos text-light my-2">
+        <li class="
+            list-group-item
+            d-flex
+            justify-content-between
+            align-items-center
+          ">
+          <p :class="{ done: todo.done }" @click="done(todo)" class="cursor">
+            <!-- {{ todo.content ? todo.content : todo }} -->
+            {{ todo.content }}
+          </p>
+          <button type="button" class="far fa-trash-alt delete" @click="deleteTodo(index)"></button>
+        </li>
+      </ul>
     </div>
+  </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref } from "vue";
 export default {
   setup() {
-    const search = ref ('')
-    const searches = ref([])
-    // boş bir arrayde tutma
+    ref;
+    const todo = ref("");
+    const todos = ref([]);
+
     function addToDo() {
-      searches.value.push({
-        done: false,
-        content: search.value,
-      })
+      if (todo.value != "") {
+        todos.value.push({
+          done: false,
+          content: todo.value,
+          id: Date.now(),
+          // unique id
+        });
+      }
+      todo.value = "";
+      // input kısmı boşaltma
+    }
+    function done(todo) {
+      todo.done = !todo.done;
+    }
+    function deleteTodo(index) {
+      console.log('silindim', todos.value[index])
+      todos.value.splice(index, 1);
     }
     return {
-      search,
-      searches,
+      todo,
+      todos,
       addToDo,
-    }
+      deleteTodo,
+      done,
+    };
   },
-}
-
+};
 </script>
 
 <style>
@@ -38,73 +76,45 @@ body {
   margin: 0;
   width: 100%;
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  font-family: "Montserrat";
   background: linear-gradient(90deg, #c5e116, #ee7752, #e73c7e, #23a6d5);
   background-size: 500% 500%;
   animation: animaBG 10s ease infinite;
   /* linear infinite sonsuzluk  */
   animation-direction: alternate;
+  font-family: "Montserrat";
 }
+
 @keyframes animaBG {
   0% {
     background-position: 0%;
   }
+
   100% {
     background-position: 100%;
   }
 }
-.container h1 {
-    width: 100%;
-    text-align:center ;
-    margin-top: 100px;
-    color: #fff; ;
+
+.container {
+  max-width: 400px;
 }
-#inputText{
-    width: 250px;
-    height: 36px;
-    border: 1px solid white;
-    outline: none;
-    border-radius: 15px;
-    color:black;
+
+input[type-text],
+input[type-text]:focus {
+  color: azure;
+  border: none;
+  background: rgb(0, 0, 0, 0.2);
 }
-#addToDo{
-    height: 35px;
-    width: 100px;
-    border: 1px solid whitesmoke;
-    vertical-align: center;
-    font-size: 16px;
-    cursor: pointer;
-    outline: none;
-    background-color:whitesmoke ;
-    color: black;
-    text-align: center;
-    border-radius: 10px;
+
+.todos li {
+  /* background: #d3d3d3; */
+  background: linear-gradient(#f8f6f9, #e3c9da);
 }
-#addToDo:active{
-    background: green;
+
+.done {
+  text-decoration: line-through;
 }
-#clearToDo:active{
-    background: red;
-}
-#clearToDo{
-    height: 35px;
-    width: 100px;
-    border: 1px solid whitesmoke;
-    vertical-align: center;
-    font-size: 16px;
-    cursor: pointer;
-    outline: none;
-    background-color:whitesmoke ;
-    color: black;
-    text-align: center;
-    border-radius: 10px;
-}
-#clearToDo{
+
+.cursor {
   cursor: pointer;
-}
-.filtered {
-  display: none !important;
 }
 </style>
