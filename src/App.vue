@@ -8,68 +8,76 @@
       <div class="text-center my-4">
         <label class="text-light">Add New To Do</label>
         <div class="control">
-          <input v-model="todo" class="input form-control m-auto my-4" type="text" autocomplete="off"
-            placeholder="Add New " />
+          <input
+            v-model="todo"
+            class="input form-control m-auto my-4"
+            type="text"
+            autocomplete="off"
+            placeholder="Add New "
+          />
         </div>
-        <button type="submit" class="button btn btn-light my-1">Add</button>
+        <button
+          type="submit"
+          @click="addToDo"
+          class="button btn btn-light my-1"
+        >
+          Add
+        </button>
       </div>
     </form>
     <div v-for="(todo, index) in todos" :key="index">
       <ul class="list-group todos text-light my-2">
-        <li class="
+        <li
+          class="
             list-group-item
             d-flex
             justify-content-between
             align-items-center
-          ">
+          "
+        >
           <p :class="{ done: todo.done }" @click="done(todo)" class="cursor">
             <!-- {{ todo.content ? todo.content : todo }} -->
             {{ todo.content }}
           </p>
-          <button type="button" class="far fa-trash-alt delete" @click="deleteTodo(index)"></button>
+          <button
+            type="button"
+            class="far fa-trash-alt delete"
+            @click="deleteTodo(index)"
+          ></button>
         </li>
       </ul>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue";
-export default {
-  setup() {
-    ref;
-    const todo = ref("");
-    const todos = ref([]);
+const todo = ref("");
+const todos = ref([]);
 
-    function addToDo() {
-      if (todo.value != "") {
-        todos.value.push({
-          done: false,
-          content: todo.value,
-          id: Date.now(),
-          // unique id
-        });
-      }
-      todo.value = "";
-      // input kısmı boşaltma
-    }
-    function done(todo) {
-      todo.done = !todo.done;
-    }
-    function deleteTodo(index) {
-      console.log('silindim', todos.value[index])
-      todos.value.splice(index, 1);
-    }
-    return {
-      todo,
-      todos,
-      addToDo,
-      deleteTodo,
-      done,
-    };
-  },
-};
+function addToDo() {
+  if (todo.value != "") {
+    todos.value.push({
+      done: false,
+      content: todo.value,
+      id: Date.now(),
+      // unique id
+    });
+  }
+  todo.value = "";
+  // input kısmı boşaltma
+}
+
+function done(todo) {
+  todo.done = !todo.done;
+}
+
+function deleteTodo(index) {
+  console.log("silindim", todos.value[index]);
+  todos.value.splice(index, 1);
+}
 </script>
+
 
 <style>
 body {
